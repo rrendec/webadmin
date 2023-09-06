@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -e
+
+VHOST_NAME=$1
+VHOST_USER=$2
+
+if [[ -z $VHOST_NAME || -z $VHOST_USER ]]; then
+	echo "Usage: $0 vhost_name vhost_user"
+	exit 1
+fi
+
+BASE=$(dirname $(readlink -f $0))
+source $BASE/config
+
+VHOST_ROOT=$VHOST_ROOT/$VHOST_NAME
+VHOST_HOME=$VHOST_HOME/$VHOST_USER
+VHOST_CONF=$VHOST_CONF/$VHOST_NAME.conf
+VHOST_FPMC=$VHOST_FPMC/$VHOST_USER.conf
+
+if [[ -d $VHOST_ROOT ]]; then
+	echo "vhost dir $VHOST_ROOT already exists"
+	exit 1
+fi
+
+if ! id $VHOST_USER &> /dev/null; then
+	passwd=$(pwgen -svB 16 1)
+	useradd -d $VHOST_HOME $VHOST_USER
+	echo "$passwd" | passwd --stdin $VHOST_USER
+	mkdir $VHOST_HOME/log $VHOST_HOME/session
+	chown $VHOST_USER: $VHOST_HOME/log $VHOST_HOME/session
+	m4 -D VHOST_USER=$VHOST_USER -D VHOST_HOME=$VHOST_HOME \
+		$BASE/../template/php-fpm.m4 > $VHOST_FPMC
+	systemctl reload php-fpm
+fi
+
+mkdir -m 750 $VHOST_ROOT
+chown $VHOST_USER:apache $VHOST_ROOT
+mkdir $VHOST_ROOT/htdocs $VHOST_ROOT/logs
+chown $VHOST_USER: $VHOST_ROOT/htdocs $VHOST_ROOT/logs
+m4 -D VHOST_NAME=$VHOST_NAME -D VHOST_ROOT=$VHOST_ROOT \
+	-D VHOST_USER=$VHOST_USER -D SERVER_ADMIN=$SERVER_ADMIN \
+	$BASE/../template/vhost.m4 > $VHOST_CONF
+systemctl reload httpd
+
+cat << EOF
+
+Summary
+-------
+
+Username: $VHOST_USER
+Password: $passwd
+Doc root: $VHOST_ROOT/htdocs
+Web logs: $VHOST_ROOT/logs
+PHP logs: $VHOST_HOME/log
+EOF

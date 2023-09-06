@@ -1,0 +1,5 @@
+VHOST_ROOT=/var/www/vhosts
+VHOST_HOME=/var/www/home
+VHOST_CONF=/etc/httpd/vhosts.d
+VHOST_FPMC=/etc/php-fpm.d
+SERVER_ADMIN=webmaster@example.com
