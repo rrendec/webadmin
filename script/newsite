@@ -46,7 +46,7 @@ if ! id $VHOST_USER &> /dev/null; then
 	chown $VHOST_USER: $VHOST_HOME/log $VHOST_HOME/session
 	m4 -D VHOST_USER=$VHOST_USER -D VHOST_HOME=$VHOST_HOME \
 		$BASE/../template/php-fpm.m4 > $VHOST_FPMC
-	systemctl reload php-fpm
+	systemctl try-reload-or-restart php-fpm
 fi
 
 mkdir -m 750 $VHOST_ROOT
@@ -56,7 +56,7 @@ chown $VHOST_USER: $VHOST_ROOT/htdocs $VHOST_ROOT/logs
 m4 -D VHOST_NAME=$VHOST_NAME -D VHOST_ROOT=$VHOST_ROOT \
 	-D VHOST_USER=$VHOST_USER -D SERVER_ADMIN=$SERVER_ADMIN \
 	$BASE/../template/vhost.m4 > $VHOST_CONF
-systemctl reload httpd
+systemctl try-reload-or-restart httpd
 
 cat << EOF
 
