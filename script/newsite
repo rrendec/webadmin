@@ -2,6 +2,17 @@
 
 set -e
 
+passwd="!"
+
+while getopts "hn" opt; do
+	case "$opt" in
+		n)
+			passwd=
+			;;
+	esac
+done
+
+shift $((OPTIND - 1))
 VHOST_NAME=$1
 VHOST_USER=$2
 
@@ -26,9 +37,11 @@ if [[ -d $VHOST_ROOT ]]; then
 fi
 
 if ! id $VHOST_USER &> /dev/null; then
-	passwd=$(pwgen -svB 16 1)
 	useradd -d $VHOST_HOME $VHOST_USER
-	echo "$passwd" | passwd --stdin $VHOST_USER
+	if [[ -n $passwd ]]; then
+		passwd=$(pwgen -svB 16 1)
+		echo "$passwd" | passwd --stdin $VHOST_USER
+	fi
 	mkdir $VHOST_HOME/log $VHOST_HOME/session
 	chown $VHOST_USER: $VHOST_HOME/log $VHOST_HOME/session
 	m4 -D VHOST_USER=$VHOST_USER -D VHOST_HOME=$VHOST_HOME \
