@@ -13,6 +13,8 @@ fi
 BASE=$(dirname $(readlink -f $0))
 source $BASE/config
 
+mkdir -p $VHOST_ROOT $VHOST_HOME
+
 VHOST_ROOT=$VHOST_ROOT/$VHOST_NAME
 VHOST_HOME=$VHOST_HOME/$VHOST_USER
 VHOST_CONF=$VHOST_CONF/$VHOST_NAME.conf
