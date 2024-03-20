@@ -24,7 +24,13 @@ fi
 BASE=$(dirname $(readlink -f $0))
 source $BASE/config
 
-mkdir -p $VHOST_ROOT $VHOST_HOME
+if [[ ! -d $VHOST_ROOT ]]; then
+	mkdir $VHOST_ROOT
+	chown root:apache $VHOST_ROOT
+	chmod 751 $VHOST_ROOT
+fi
+
+mkdir -p $VHOST_HOME
 
 VHOST_ROOT=$VHOST_ROOT/$VHOST_NAME
 VHOST_HOME=$VHOST_HOME/$VHOST_USER
