@@ -26,7 +26,7 @@ source $BASE/config
 
 if [[ ! -d $VHOST_ROOT ]]; then
 	mkdir $VHOST_ROOT
-	chown root:apache $VHOST_ROOT
+	chown root:$HTTPD_USER $VHOST_ROOT
 	chmod 751 $VHOST_ROOT
 fi
 
@@ -56,7 +56,7 @@ if ! id $VHOST_USER &> /dev/null; then
 fi
 
 mkdir -m 750 $VHOST_ROOT
-chown $VHOST_USER:apache $VHOST_ROOT
+chown $VHOST_USER:$HTTPD_USER $VHOST_ROOT
 mkdir $VHOST_ROOT/htdocs $VHOST_ROOT/logs
 chown $VHOST_USER: $VHOST_ROOT/htdocs $VHOST_ROOT/logs
 m4 -D VHOST_NAME=$VHOST_NAME -D VHOST_ROOT=$VHOST_ROOT \

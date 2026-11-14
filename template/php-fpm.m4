@@ -1,10 +1,10 @@
 [VHOST_USER]
-listen = /var/www/php-fpm/VHOST_USER.sock
-listen.owner = apache
-listen.group = apache
-listen.mode = 0660
 user = VHOST_USER
 group = VHOST_USER
+listen = VHOST_SOCK/VHOST_USER.sock
+listen.owner = HTTPD_USER
+listen.group = HTTPD_USER
+listen.mode = 0660
 pm = dynamic
 pm.max_children = 10
 pm.start_servers = 2

@@ -2,4 +2,6 @@ VHOST_ROOT=/var/www/vhosts
 VHOST_HOME=/var/www/home
 VHOST_CONF=/etc/httpd/vhosts.d
 VHOST_FPMC=/etc/php-fpm.d
+VHOST_SOCK=/var/www/php-fpm
+HTTPD_USER=apache
 SERVER_ADMIN=webmaster@example.com
