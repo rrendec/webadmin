@@ -1,0 +1,7 @@
+VHOST_ROOT=/var/www/vhosts
+VHOST_HOME=/var/www/home
+VHOST_CONF=/etc/apache2/sites-available
+VHOST_FPMC=/etc/php/default/fpm/pool.d
+VHOST_SOCK=/var/www/php-fpm
+HTTPD_USER=www-data
+SERVER_ADMIN=webmaster@example.com
